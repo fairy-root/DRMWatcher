@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRM Watcher</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-title">
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="21 21l-4.35-4.35"/>
+                </svg>
+                <h1>DRM Watcher</h1>
+            </div>
+            <div class="controls">
+                <button id="toggleCapture" class="btn btn-primary">
+                    <svg id="captureIcon" class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span id="captureText">Start</span>
+                </button>
+                <button id="clearData" class="btn btn-ghost">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3,6 5,6 21,6"/>
+                        <path d="19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"/>
+                    </svg>
+                    Clear
+                </button>
+            </div>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <div id="statusDot" class="status-dot"></div>
+                <span id="statusText">Not Capturing</span>
+            </div>
+            <div class="counter">
+                <span id="requestCount">0</span> captured
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">MPD URL</span>
+                        <button class="copy-btn" data-target="mpdUrl">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="mpdUrl" class="data-field" placeholder="No MPD URL captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">License URL</span>
+                        <button class="copy-btn" data-target="licenseUrl">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="licenseUrl" class="data-field" placeholder="No license URL captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">MPD Headers</span>
+                        <button class="copy-btn" data-target="mpdHeaders">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="mpdHeaders" class="data-field" placeholder="No headers captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">License Headers</span>
+                        <button class="copy-btn" data-target="licenseHeaders">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="licenseHeaders" class="data-field" placeholder="No headers captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">Cookies</span>
+                        <button class="copy-btn" data-target="cookies">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="cookies" class="data-field" placeholder="No cookies captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <span class="card-title">PSSH Data</span>
+                        <button class="copy-btn" data-target="psshData">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="psshData" class="data-field" placeholder="No PSSH data captured..." readonly></textarea>
+                </div>
+
+                <div class="data-card full-width">
+                    <div class="card-header">
+                        <span class="card-title">Complete Data</span>
+                        <button class="copy-btn" data-target="allData">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="5,15H4a2,2 0 0,1-2-2V4a2,2 0 0,1,2-2H15a2,2 0 0,1,2,2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea id="allData" class="data-field expanded" placeholder="Complete captured data as JSON..." readonly></textarea>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <span class="version">v1.0.0</span>
+                <span class="separator">•</span>
+                <a href="https://t.me/FairyRoot" class="author" target="_blank" rel="noopener noreferrer">fairy-root</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
